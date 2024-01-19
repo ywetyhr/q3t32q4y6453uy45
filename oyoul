@@ -1,0 +1,665 @@
+
+
+-- // Update by: vcd_
+-- // skipperha my love
+
+
+task.wait();
+---------------------
+local services = setmetatable({}, {__index = function(self, key)
+	return game:GetService(key);
+end,});
+---------------------
+local players = services.Players;
+local replicatedstorage = services.ReplicatedStorage;
+local runservice = services.RunService;
+local startergui = services.StarterGui;
+local tweenserv = services.TweenService;
+---------------------
+local mn = {927365822};
+local sm = {6916371803}; -- {9120643399, 9120643378, 9120643201, 9120643380}
+---------------------
+local player = players.LocalPlayer;
+---------------------
+local assets = replicatedstorage:WaitForChild("ASSETS");
+local remotes = assets:WaitForChild("___skipperha___");
+local modules = assets:WaitForChild("MODULES")
+local animations = assets:WaitForChild("ANIMATIONS");
+---------------------
+local studioDebug = script:WaitForChild("StudioDebug").Value;
+---------------------
+local reciever = script:WaitForChild("Reciever").Value;
+local giver = script:WaitForChild("Giver").Value;
+---------------------
+local ignore = {};
+---------------------
+local function se_(f)
+	local ty, fol = pcall(f);
+	if not ty then
+		warn("Ошибка выполнения: " .. tostring(fol));
+	end;
+end;
+---------------------
+for i, v in next, reciever:GetChildren() do
+	if v:IsA("BasePart") and v.Transparency == 0 then
+		table.insert(ignore, v)
+	end
+	if v.Name == "hitbox" then
+		table.insert(ignore, v)
+	end
+end
+---------------------
+local par = RaycastParams.new()
+par.FilterDescendantsInstances = ignore
+---------------------
+if studioDebug then
+	task.wait(1)
+	local w = Instance.new("Motor6D", giver)
+	w.Name = "charWeld"
+	w.Part0 = giver.HumanoidRootPart
+	w.Part1 = reciever.HumanoidRootPart
+	w.C0 = CFrame.new(0, 0, -1)
+end
+---------------------
+local connection = giver:WaitForChild("charWeld")
+---------------------
+script.Parent = player.PlayerScripts
+---------------------
+local humR = reciever:WaitForChild("Humanoid")
+local humG = giver:WaitForChild("Humanoid")
+---------------------
+local animatorR = humR:FindFirstChild("Animator")
+local animatorG = humG:FindFirstChild("Animator")
+---------------------
+local animateR = reciever:FindFirstChild("Animate")
+local animateG = giver:FindFirstChild("Animate")
+---------------------
+if animateG then
+	animateG:Destroy()
+end
+if animateR then
+	animateR:Destroy()
+end
+---------------------
+local trackData = {}
+local boneStructure = {
+	g = {},
+	r = {}
+}
+local squirtRender = {}
+---------------------
+local playing
+---------------------
+local sin = math.sin
+local gravity = Vector3.new(0, -workspace.Gravity, 0)
+---------------------
+local t = 0
+local speedAdjuster = 12
+local speed = 1
+local releaseSpeed = 1
+local releaseSpeed2 = 1
+local percent = 0
+local sfxx = 0
+local releaseAmount = 92
+local internalSpeed = speedAdjuster
+---------------------
+local debounce = false
+local animate = true
+---------------------
+for _, obj in ipairs(animations:GetChildren()) do 
+	trackData[obj.Name] = require(obj)
+end
+for _, obj in next, reciever:GetDescendants() do 
+	if obj:IsA("Bone") then
+		local model = obj:FindFirstAncestorWhichIsA("Model")
+		local n = model.Name.."_"..obj.Name
+		boneStructure.r[n] = {bone=obj,C0=obj.CFrame}
+	end
+end
+for _, obj in next, giver:GetDescendants() do 
+	if obj:IsA("Bone") then
+		local model = obj:FindFirstAncestorWhichIsA("Model")
+		local n = model.Name.."_"..obj.Name
+		boneStructure.g[n] = {bone=obj,C0=obj.CFrame}
+	end
+end
+giver.DescendantAdded:Connect(function(obj)
+	if obj:IsA("Bone") and not boneStructure.g[obj.Name] then
+		local model = obj:FindFirstAncestorWhichIsA("Model")
+		local n = model.Name.."_"..obj.Name
+		boneStructure.g[n] = {bone=obj,C0=obj.CFrame}
+	end
+end)
+reciever.DescendantAdded:Connect(function(obj)
+	if obj:IsA("Bone") and not boneStructure.r[obj.Name] then
+		local model = obj:FindFirstAncestorWhichIsA("Model")
+		local n = model.Name.."_"..obj.Name
+		boneStructure.r[n] = {bone=obj,C0=obj.CFrame}
+	end
+end)
+---------------------
+function sfx(parent, prop)
+	if player:GetAttribute("MUTESFX") then
+		return
+	end
+	local sfx = Instance.new("Sound")
+	for i, v in next, prop do 
+		sfx[i]=v
+	end
+	sfx.Parent = parent
+	sfx:Play()
+	task.delay(1, function()
+		task.wait(sfx.TimeLength - 0.7)
+		sfx:Destroy()
+	end)
+end
+---------------------
+function lerp(a, b, t)
+	t = math.clamp(t, 0, 1);
+	local u = 1 - t;
+	return a * u + b * t;
+end;
+---------------------
+if animatorG then
+	animatorG:Destroy()
+end
+if animatorR then
+	animatorR:Destroy()
+end
+---------------------
+function changeAnim(name)
+	animate = false
+	t = 0
+	local data = trackData[name]
+	task.wait()
+	for i, d in next, boneStructure.g do 
+		if not i:find("droop") then
+			d.bone.CFrame = d.C0
+		end
+	end
+	for i, d in next, boneStructure.r do 
+		if not i:find("droop") then
+			d.bone.CFrame = d.C0
+		end
+	end
+	task.wait()
+	animate = true
+	playing = data
+end
+---------------------
+function doInput(kc)
+	if kc == Enum.KeyCode.World0 then
+		changeAnim("Catty")
+	end
+	if kc == Enum.KeyCode.World1 then
+		changeAnim("CattyV2")
+	end
+	if kc == Enum.KeyCode.World2 then
+		changeAnim("CattyV3")
+	end
+	if kc == Enum.KeyCode.World3 then
+		changeAnim("Blow")
+	end
+	if kc == Enum.KeyCode.World4 then
+		changeAnim("BlowjobV2")
+	end
+	if kc == Enum.KeyCode.World5 then
+		changeAnim("Blowb")
+	end
+	if kc == Enum.KeyCode.World6 then
+		changeAnim("Bowb")
+	end
+	if kc == Enum.KeyCode.World7 then
+		changeAnim("HandjobV2")
+	end
+	if kc == Enum.KeyCode.World8 then
+		changeAnim("SibaDoggy")
+	end
+	if kc == Enum.KeyCode.World9 then
+		changeAnim("DoggyV2")
+	end
+	if kc == Enum.KeyCode.World10 then
+		changeAnim("DoggyV3")
+	end
+	if kc == Enum.KeyCode.World11 then
+		changeAnim("Lowdog")
+	end
+	if kc == Enum.KeyCode.World12 then
+		changeAnim("69")
+	end
+	if kc == Enum.KeyCode.World13 then
+		changeAnim("Standing69")
+	end
+	if kc == Enum.KeyCode.World14 then
+		changeAnim("Carry")
+	end
+	if kc == Enum.KeyCode.World15 then
+	end
+	if kc == Enum.KeyCode.World16 then
+		changeAnim("FaceOff")
+	end
+	if kc == Enum.KeyCode.World17 then
+		changeAnim("FaceSit")
+	end
+	if kc == Enum.KeyCode.World18 then
+		changeAnim("Press")
+	end
+	if kc == Enum.KeyCode.World19 then
+		changeAnim("Cowgirl")
+	end
+	if kc == Enum.KeyCode.World20 then
+		changeAnim("CowgirlV2")
+	end
+	if kc == Enum.KeyCode.World21 then
+		changeAnim("Side")
+	end
+	if kc == Enum.KeyCode.World22 then
+		changeAnim("TRLDoggy")
+	end
+	if kc == Enum.KeyCode.World23 then
+		changeAnim("CarryR")
+	end
+end
+
+
+local pl = false 
+local bf = false
+
+if players:FindFirstChild(giver.Name) and player.Name == giver.Name then
+	pl = true
+end
+
+if not players:FindFirstChild(giver.Name) and player.Name == reciever.Name then
+	pl = true
+	bf = true
+end
+
+local cui;
+if player.Name == reciever.Name or player.Name == giver.Name then
+	cui = script.bar:Clone()
+	cui.Enabled = true
+	cui.Parent = player.PlayerGui
+	cui.rel.InputBegan:Connect(function(inp)
+		if inp.UserInputType == Enum.UserInputType.MouseButton1 or inp.UserInputType == Enum.UserInputType.Touch then
+			remotes.Input:FireServer(bf and giver or player, "rel")
+		end
+	end)
+end
+if pl then 
+	local ui = script.ay:Clone()
+	ui.Parent = player.PlayerGui--.__V__AV__NEW__:FindFirstChild("__AV__F_A___AA___AN__IMS__AV__")
+
+	for i,v in next, ui["____-C__-M__A____"].___S__CROOOL___FAME___:GetChildren() do 
+		if v:IsA("TextButton") or v:IsA("ImageButton") then
+			v.InputBegan:Connect(function(inp, gp)
+				if inp.UserInputType == Enum.UserInputType.Touch or inp.UserInputType == Enum.UserInputType.MouseButton1 then
+					remotes.Input:FireServer(bf and giver or player, v.Name)
+				end
+			end)
+		end
+	end
+	local uis = services.UserInputService
+	uis.InputBegan:Connect(function(inp, gp)
+		if not gp then
+			if studioDebug then
+				doInput(inp.KeyCode)
+				return
+			end
+			remotes.Input:FireServer(bf and giver or player, inp.KeyCode.Name)
+		end
+	end)
+	player.Chatted:Connect(function(msg)
+		if msg:sub(1,3) == "/s " then
+			speedAdjuster = math.clamp(tonumber(msg:sub(4)), 0, 50)
+			remotes.Input:FireServer(bf and giver or player, speedAdjuster)
+		end
+		if msg == "/rel" then
+			remotes.Input:FireServer(bf and giver or player, "rel")
+		end
+	end)
+end
+
+local doRelease = false
+
+script.ay:Destroy();
+
+remotes.Input.OnClientEvent:Connect(function(sent, player2, inp)
+	if inp == "rel" and script.Name == player2.Name then
+		doRelease = true
+		return
+	end
+	if typeof(inp) == "number" and script.Name == player2.Name then
+		speedAdjuster = inp
+		return
+	end
+	if player2 and player2.Name == script.Name then
+		doInput(Enum.KeyCode[inp])
+	end
+end)
+local si, no = pcall(function()
+	local m = giver:FindFirstChild("droop2", true):Clone()
+end)
+
+for i,v in next, boneStructure.g do 
+	if i:find("droop") then
+		v.bone.CFrame = CFrame.new()
+	end
+end
+
+function getPosition(g, p0,v0,dt) 
+	return p0 + v0 * dt + 0.5 * g * (dt ^ 2) 
+end
+
+function squirt(cf, vel)
+	local m = Instance.new("Model") -- Declare the variable 'm' here
+	cf = CFrame.lookAt(cf.Position, cf.Position + (vel * 1000))
+	m["sticky_liquid.001"].Anchored = true
+	m.Parent = workspace.Terrain
+	m:PivotTo(cf)
+	local d = {
+		dir = vel,
+		ori = cf,
+		s = time(),
+	}
+	for i,v in next, m["sticky_liquid.001"]:GetChildren() do 
+		local sp = v.Name:split(".")
+		local offset = sp[2] and tonumber(sp[2]) / 41 or 0
+		--v.CFrame = CFrame.new()
+		d[v] = {o = offset, l = v.WorldPosition}
+	end
+
+	local ind = #squirtRender + 1
+	d.ind = ind
+	table.insert(squirtRender, d)
+	task.delay(3, function()
+		if squirtRender[ind] ~= nil and not m:FindFirstChild("WeldConstraint", true) then
+			squirtRender[ind] = nil
+			m:Destroy()
+		end
+	end)
+end
+
+    runservice.RenderStepped:Connect(function(dt)
+        t = t + dt * speedAdjuster * internalSpeed * releaseSpeed * speed
+
+        local relPercent = percent / releaseAmount
+
+        if cui and cui:FindFirstChild("Frame") then
+            if bf and player.Name == reciever.Name or player.Name == giver.Name then
+                if relPercent >= 1 and not doRelease then
+                    cui.rel.Visible = true
+                else
+					se_(function()
+                        cui.rel.Visible = false
+                    end)
+                end
+            end
+            cui.Frame.Frame.Position = UDim2.fromScale(relPercent, 0)
+            cui.Frame.Frame.bar.Position = UDim2.fromScale(-relPercent, 0)
+        end
+
+
+	local tc = time()
+	for i, data in next, squirtRender do 
+		for b, boneData in next, data do 
+			if typeof(b) == "Instance" then
+				local p = getPosition(gravity, data.ori.Position, data.dir * 25, (tc - data.s) - boneData.o)
+				b.WorldCFrame = CFrame.lookAt(p, boneData.l) * CFrame.Angles(-math.pi/2, 0, 0)
+				local touch = workspace:Raycast(boneData.l, (p - boneData.l), par)
+				if touch then
+					local weld = b.Parent:FindFirstChild("WeldConstraint")
+					if not weld then
+						local w = Instance.new("WeldConstraint")
+						w.Part0 = touch.Instance
+						w.Part1 = b.Parent
+						w.Parent = b.Parent
+						b.Parent.Anchored = false
+					end
+					b.WorldCFrame = CFrame.lookAt(touch.Position, touch.Position + touch.Normal)
+					data[b] = nil
+					continue
+				end
+				boneData.l = b.WorldPosition
+			end
+		end
+	end
+
+	if playing then
+		connection.C0 = playing.connection
+
+		local one = playing.one
+		local two = playing.two  
+		local oneOffsets = one.offsets
+		local twoOffsets = two.offsets
+		local onePoseA = one.a 
+		local onePoseB = one.b
+		local twoPoseA = two.a 
+		local twoPoseB = two.b
+		local oneFullOffset = one.fullOffset
+		local twoFullOffset = two.fullOffset
+		local oneSpeed = one.speed
+		local twoSpeed = two.speed
+
+		local speed = 1
+
+		local alpha = 0.5 + (sin(t * speed) / 2)
+
+		if animate then
+			for limb, pose in next, onePoseA do 
+				local motor = giver:FindFirstChild(limb, true)
+				local bone = boneStructure.g[limb]
+				if bone then
+					local alpha = 0.5 + ((sin(t * speed + (oneOffsets[limb] or 0) + oneFullOffset) / 2) * oneSpeed)
+					local nextPose = onePoseB[limb]
+					bone.bone.CFrame = pose:Lerp(nextPose, alpha)
+				end
+				if motor and motor:IsA("Motor6D") then 
+					local alpha = 0.5 + ((sin(t * speed + (oneOffsets[limb] or 0) + oneFullOffset) / 2) * oneSpeed)
+					local nextPose = onePoseB[limb]
+					motor.Transform = pose:Lerp(nextPose, alpha)
+				end
+			end
+
+			for limb, pose in next, twoPoseA do 
+				local motor = reciever:FindFirstChild(limb, true)
+				local bone = boneStructure.r[limb]
+				if bone then
+					local alpha = 0.5 + ((sin(t * speed + (twoOffsets[limb] or 0) + twoFullOffset) / 2) * (speedAdjuster / 18) * twoSpeed)
+					local nextPose = twoPoseB[limb]
+					bone.bone.CFrame = pose:Lerp(nextPose, alpha)
+				end
+				if motor and motor:IsA("Motor6D") then 
+					local alpha = 0.5 + ((sin(t * speed + (twoOffsets[limb] or 0) + twoFullOffset) / 2) * twoSpeed)
+					local nextPose = twoPoseB[limb]
+					motor.Transform = pose:Lerp(nextPose, alpha)
+				end
+			end
+		end
+
+		if alpha > 0.4 and not debounce then
+			percent += 1
+			sfxx += 1 
+			if sfxx > #sm then
+				sfxx = 1
+			end
+			debounce = true
+			if reciever:FindFirstChild("Torso") then
+				if not playing.mouth then
+					sfx(reciever.Torso, {PlaybackSpeed = 1.2 + (math.random()/4), SoundId = "rbxassetid://"..sm[sfxx], RollOffMode = Enum.RollOffMode.InverseTapered, Volume = 0.3})
+				end
+				sfx(reciever.Torso, {PlaybackSpeed = 2, SoundId = "rbxassetid://8142423452", Volume = 0.35, RollOffMode = Enum.RollOffMode.InverseTapered})
+			end	
+			internalSpeed = 1.5
+		end
+		if alpha < 0.4 then
+			debounce = false
+		end
+
+		if relPercent >= 0.7 and animate then
+			if cui and cui:FindFirstChild("Frame") then
+				cui.Frame.Position = UDim2.new(0.007, math.random(-1,1),0.755, math.random(-1,1))
+				cui.w.BackgroundTransparency = lerp(cui.w.BackgroundTransparency, 0.8, 1 - (0.001 ^ dt))
+			end
+			speed = 1.4
+		else 
+			if cui and cui:FindFirstChild("w") then
+				cui.w.BackgroundTransparency = lerp(cui.w.BackgroundTransparency, 1, 1 - (0.001 ^ dt))
+			end
+			speed = 1
+		end
+
+		if doRelease and animate then
+			doRelease = false
+			task.defer(function()
+				local a = 1
+				local s = os.clock()
+				local t = 0
+				while (os.clock() - s) < 4 do 
+					t += task.wait()
+					if t >= 0.07 then
+						t = 0
+						cui.p:Fire()
+					end
+					cui.Frame.Position = UDim2.new(0.007, math.random(-3,3),0.755, math.random(-3,3))
+				end
+				cui.Frame.Position = UDim2.new(0.007, 0,0.755, 0)
+			end)
+			releaseSpeed = 0
+			animate = false
+			local anim = true
+			local offset = 1
+			local s = os.clock()
+			task.defer(function()
+				while anim do 
+					local dt = runservice.RenderStepped:Wait()
+					local alpha = math.clamp((os.clock() - s) / 0.7, 0, 1)
+					for limb, pose in next, onePoseA do 
+						local motor = giver:FindFirstChild(limb, true)
+						local bone = boneStructure.g[limb]
+						if bone then
+							bone.bone.CFrame = bone.bone.CFrame:Lerp(bone.C0, alpha)
+						end
+						if motor and motor:IsA("Motor6D") then 
+							local nextPose = onePoseB[limb]
+							motor.Transform = motor.Transform:Lerp(nextPose:Lerp(pose, offset), alpha)
+						end
+					end
+
+					for limb, pose in next, twoPoseA do 
+						local motor = reciever:FindFirstChild(limb, true)
+						local bone = boneStructure.r[limb]
+						if bone then
+							bone.bone.CFrame = bone.bone.CFrame:Lerp(bone.C0, alpha)
+						end
+						if motor and motor:IsA("Motor6D") then 
+							local nextPose = twoPoseB[limb]
+							motor.Transform = motor.Transform:Lerp(nextPose:Lerp(pose, offset), alpha)
+						end
+					end
+					offset = lerp(offset, 0.15, 1 - (0.001 ^ dt))
+				end
+			end)
+
+			task.defer(function()
+				task.wait(1)
+				for i,v in next, boneStructure.g do 
+					if i:find("droop") then
+						v.bone.CFrame = boneStructure.g[i:split("_")[1].."_Bone"].C0
+					end
+				end
+				local releasePose = playing.release
+				if releasePose and releasePose ~= "projectile" then
+					local inf = TweenInfo.new(playing.releaseSpeed * 1.5, Enum.EasingStyle.Cubic)
+					for i,v in next, releasePose do
+						local sp = i:split(".")
+						local d = sp[2] and tonumber(sp[2])/10 or 0
+						task.delay(i:find("droop2") and 1 or 0.2 + d, function()
+							local bone = boneStructure.g[i]
+							if bone then
+								tweenserv:Create(bone.bone, inf, {CFrame = v}):Play()
+							end
+						end)
+					end
+				end
+				offset = 0
+				if releasePose and releasePose == "projectile" then
+					squirt(giver:FindFirstChild("p",true).darker.CFrame, giver.Head.CFrame.LookVector + (Vector3.new(math.random(-100,100)/100,math.random(-100,100)/100,math.random(-100,100)/100) / 20))
+				else
+					sfx(reciever.Head, {SoundId = "rbxassetid://661479685", Volume = 0.1})
+				end
+				task.wait(0.25)
+				for	i = 1, 3 do 
+					offset = 0
+					if releasePose and releasePose == "projectile" then
+						squirt(giver:FindFirstChild("p",true).darker.CFrame, giver.Torso.CFrame.LookVector + (Vector3.new(math.random(-100,100)/100,math.random(-100,100)/100,math.random(-100,100)/100) / 20))
+					else
+						sfx(reciever.Torso, {SoundId = "rbxassetid://9114172109", Volume = 1})
+					end
+					task.wait(0.9)
+				end
+				task.wait(1)
+				percent = 0
+				anim = false
+				if playing.releaseAfter then
+					task.defer(function()
+						s = os.clock()
+						while true do 
+							local dt = runservice.RenderStepped:Wait()
+							local alpha = math.clamp((os.clock() - s) / 4.7, 0, 1)
+							for limb, pose in next, playing.releaseAfter.one do 
+								local motor = giver:FindFirstChild(limb, true)
+								if motor and motor:IsA("Motor6D") then 
+									motor.Transform = motor.Transform:Lerp(pose, alpha)
+								end
+							end
+
+							for limb, pose in next, playing.releaseAfter.two do 
+								local motor = reciever:FindFirstChild(limb, true)
+								if motor and motor:IsA("Motor6D") then 
+									local nextPose = twoPoseB[limb]
+									motor.Transform = motor.Transform:Lerp(pose, alpha)
+								end
+							end
+							if alpha >= 0.2 then
+								break
+							end
+						end
+						s = os.clock()
+						while true do 
+							local dt = runservice.RenderStepped:Wait()
+							local alpha = math.clamp((os.clock() - s) / 3, 0, 1)
+							for limb, pose in next, onePoseB do 
+								local motor = giver:FindFirstChild(limb, true)
+								if motor and motor:IsA("Motor6D") then 
+									motor.Transform = motor.Transform:Lerp(pose, alpha)
+								end
+							end
+
+							for limb, pose in next, twoPoseB do 
+								local motor = reciever:FindFirstChild(limb, true)
+								if motor and motor:IsA("Motor6D") then 
+									local nextPose = twoPoseB[limb]
+									motor.Transform = motor.Transform:Lerp(pose, alpha)
+								end
+							end
+							if alpha == 1 then
+								break
+							end
+						end
+					end)
+				end
+				task.wait(6)
+				t = 0
+				animate = true
+				releaseSpeed = 1
+			end)
+		end
+
+		--releaseSpeed = lerp(releaseSpeed, releaseSpeed2, 1 - (0.01 ^ dt))
+		internalSpeed = lerp(internalSpeed, 0.5, 1 - (0.0001 ^ dt))
+
+	end
+end)
+
+playing = trackData.Cowgirl;
+
