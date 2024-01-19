@@ -105,7 +105,11 @@ end;
 
 --]]
  -- // Если вам нужно переместить модуль в какой либо сервис то пользуйтесь
-	
+
+
+-- // Папка с ремоутами
+local skipperha = Instance.new("Folder") skipperha.Name = "___skipperha___" skipperha.Parent = script;local new_bot = Instance.new("RemoteFunction") new_bot.Name = "NewBot" new_bot.Parent = skipperha local request = Instance.new("RemoteFunction") request.Name = "Request" request.Parent = skipperha local selects = Instance.new("RemoteFunction") selects.Name = "Select" selects.Parent = skipperha local input = Instance.new("RemoteEvent") input.Name = "Input" input.Parent = skipperha local morph = Instance.new("RemoteEvent") morph.Name = "Morph" morph.Parent = skipperha local rpperms = Instance.new("RemoteEvent") rpperms.Name = "RPPERMS" rpperms.Parent = skipperha local sent = Instance.new("RemoteEvent") sent.Name = "Sent" sent.Parent = skipperha local rmi = Instance.new("RemoteEvent") rmi.Name = "rmi" rmi.Parent = skipperha local rp = Instance.new("RemoteEvent") rp.Name = "rp" rp.Parent = skipperha local roomm = Instance.new("RemoteEvent") roomm.Name = "Roomm" roomm.Parent = skipperha;                                   
+
 task.wait(4)
 local _s = setmetatable({}, {__index = function(self, key)
 	return game:GetService(key)
