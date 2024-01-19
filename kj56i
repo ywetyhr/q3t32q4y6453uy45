@@ -1,3 +1,102 @@
 
 -- // Code by: vcd_
 -- // discord.gg/robloxxx
+
+wait(4);
+
+--------------------------------------
+lighting = game:GetService("Lighting");
+--------------------------------------
+--[[
+lighting.Ambient = Color3.fromRGB(65, 63, 81)
+lighting.Brightness = 0.32
+lighting.ColorShift_Bottom = Color3.fromRGB(0, 0, 0)
+lighting.ColorShift_Top = Color3.fromRGB(158, 133, 255)
+lighting.EnvironmentDiffuseScale = 0
+lighting.EnvironmentSpecularScale = 1
+lighting.GlobalShadows = true
+lighting.OutdoorAmbient = Color3.fromRGB(0, 0, 0)
+lighting.ClockTime = 13
+lighting.GeographicLatitude = 174
+lighting.TimeOfDay = 13
+lighting.ExposureCompensation = 0
+]]
+--------------------------------------
+
+--Startup things
+
+game.Players.CharacterAutoLoads = true;
+
+--Move stuff to the correct services
+
+scripts = {}
+for i,v in pairs(script.Parent.Move:GetChildren()) do
+	if v.Name ~= "StarterPlayerScripts" and v.Name ~= "StarterCharacterScripts" then
+		for i,w in pairs(v:GetChildren()) do
+			w.Parent = game:GetService(v.Name)
+			if w:IsA("BaseScript") then
+				if w.ClassName ~= "ModuleScript" then
+					table.insert(scripts, w)
+				end
+			end
+		end
+	elseif v.Name == "StarterPlayerScripts" then
+		for i,w in pairs(v:GetChildren()) do
+			w.Parent = game.StarterPlayer.StarterPlayerScripts
+			if w:IsA("BaseScript") then
+				if w.ClassName ~= "ModuleScript" then
+					table.insert(scripts, w)
+				end
+			end
+		end
+	elseif v.Name == "Lighting" then
+		for i,w in pairs(v:GetChildren()) do
+			w.Parent = game.StarterPlayer.StarterPlayerScripts
+			if w:IsA("BaseScript") then
+				if w.ClassName ~= "ModuleScript" then
+					table.insert(scripts, w)
+				end
+			end
+		end
+	elseif v.Name == "StarterPack" then
+		for i,w in pairs(v:GetChildren()) do
+			w.Parent = game.StarterPack
+			if w:IsA("BaseScript") then
+				if w.ClassName ~= "ModuleScript" then
+					table.insert(scripts, w)
+				end
+			end
+		end
+	elseif v.Name == "StarterCharacterScripts" then
+		for i,w in pairs(v:GetChildren()) do
+			w.Parent = game.StarterPlayer.StarterCharacterScripts
+			if w:IsA("BaseScript") then
+				if w.ClassName ~= "ModuleScript" then
+					table.insert(scripts, w)
+				end
+			end
+		end
+	end
+end
+for i,v in pairs(scripts) do
+	v.Disabled = false
+end
+
+
+
+
+
+--Skybox
+
+--[[
+CheckForSky = false
+for i,v in pairs(lighting:GetChildren()) do
+	if v:IsA("Sky") then
+		CheckForSky = true
+	end
+end 
+
+if CheckForSky == false then
+	script.Parent.SpecialMove["2013Sky"]:Clone().Parent = lighting
+end
+]]
