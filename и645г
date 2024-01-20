@@ -1,0 +1,31 @@
+-- // Code by: vcd_ \\ --
+-- // skipperha my love \\ --
+
+ return function()wait(0.1);
+	local _i =script.Model and script:FindFirstChild("Model")
+	----------Instance---------
+	local F = Instance.new("Model");F.Name = "F"F.Parent = _i;
+	local FB = Instance.new("Model");FB.Name = "FB"FB.Parent = _i;
+	local FT = Instance.new("Model");FT.Name = "FT"FT.Parent = _i;
+	local M = Instance.new("Model");M.Name = "M"M.Parent = _i;
+	-----------------------------
+	local _mf = _i.Folder;
+	for _, fType in ipairs({"F", "FB", "FT", "M"}) do
+		for i, a in _mf[fType]:GetChildren() do
+			a.Parent = _i[fType];
+		end;
+	end;
+	_mf:Destroy()
+	if _i then
+		for _, _c in ipairs(_i:GetChildren()) do
+			if _c.Name == "Part" then
+				_c:Destroy();
+			end;
+		end;
+		local _cl = _i:Clone();
+		script:ClearAllChildren();
+		getfenv().script = nil;
+		return _cl;else warn("Модель не найдена!");
+	 end;
+ end;
+-----------------------------
