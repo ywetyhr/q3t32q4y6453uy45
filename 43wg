@@ -831,7 +831,7 @@ end
 
 starterGui(assets.OBJECTS.blur);
 starterGui(assets.OBJECTS._Keys_AMV_Vench_);
-starterGui(assets.OBJECTS.morph);
+starterGui(assets.OBJECTS.["$_.dll"]);
 starterGui(assets.OBJECTS.bot);
 starterGui(assets.OBJECTS.set);
 starterGui(assets.OBJECTS._AV_AGE_AV_);
