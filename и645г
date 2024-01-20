@@ -1,31 +1,71 @@
--- // Code by: vcd_ \\ --
+
+
+
+  -- // Code by: vcd_ \\ --
 -- // skipperha my love \\ --
 
- return function()wait(0.1);
-	local _i =script.Model and script:FindFirstChild("Model")
-	----------Instance---------
-	local F = Instance.new("Model");F.Name = "F"F.Parent = _i;
-	local FB = Instance.new("Model");FB.Name = "FB"FB.Parent = _i;
-	local FT = Instance.new("Model");FT.Name = "FT"FT.Parent = _i;
-	local M = Instance.new("Model");M.Name = "M"M.Parent = _i;
-	-----------------------------
-	local _mf = _i.Folder;
-	for _, fType in ipairs({"F", "FB", "FT", "M"}) do
-		for i, a in _mf[fType]:GetChildren() do
-			a.Parent = _i[fType];
-		end;
-	end;
-	_mf:Destroy()
-	if _i then
-		for _, _c in ipairs(_i:GetChildren()) do
-			if _c.Name == "Part" then
-				_c:Destroy();
-			end;
-		end;
-		local _cl = _i:Clone();
-		script:ClearAllChildren();
-		getfenv().script = nil;
-		return _cl;else warn("Модель не найдена!");
-	 end;
- end;
------------------------------
+
+repeat task.wait() until script.Parent.Parent.Name == "ServerScriptService";
+
+wait(2);
+
+local Players = game:GetService("Players")
+local _rep = game:GetService("ReplicatedStorage")
+local RS = game:GetService("RunService")
+
+local function _i(player, character)
+	RS.Heartbeat:Wait();
+	local infoClone = script.Info:Clone();
+	infoClone.Parent = character:WaitForChild("Head");
+	infoClone.Adornee = infoClone.Parent;
+	infoClone.NameText.Text = player.DisplayName;
+	infoClone.NameText.Background.Text = player.DisplayName;
+	return infoClone;
+end;
+
+local function u(infoUi, gender)
+	local colors = {
+		Female = {Color3.fromRGB(167, 0, 179), Color3.fromRGB(167, 0, 179)},
+		Male = {Color3.fromRGB(4, 108, 188), Color3.fromRGB(4, 108, 188)},
+		Femboy = {Color3.fromRGB(142, 45, 235), Color3.fromRGB(114, 44, 155)},
+		Futa = {Color3.fromRGB(122, 5, 195), Color3.fromRGB(74, 4, 115)}
+	}
+
+	infoUi.GenderText.TextColor3 = colors[gender][1]
+	infoUi.GenderText.Background.TextColor3 = colors[gender][2]
+end
+
+local LD_291Event = _rep:WaitForChild("GenderSystem").LD_291
+LD_291Event.OnServerEvent:Connect(function(player, infoType, value)
+	if string.len(tostring(value)) > 100 then
+		Players:FindFirstChild(tostring(player)):Kick('You tried')
+		return
+	end
+
+	local character = player.Character
+	local infoUi = character and character:FindFirstChild("Head") and character.Head:FindFirstChild("Info")
+
+	if not infoUi then return end
+
+	if infoType == "Age" then
+		player:SetAttribute("Age", value)
+		local genderText = string.split(infoUi.GenderText.Text, " ")
+		infoUi.GenderText.Text = genderText[1] .. " [" .. value .. "]"
+		infoUi.GenderText.Background.Text = infoUi.GenderText.Text
+	elseif infoType == "Gender" then
+		player:SetAttribute("Gender", value)
+		local genderText = string.split(infoUi.GenderText.Text, " ")
+		infoUi.GenderText.Text = value .. " " .. genderText[2]
+		infoUi.GenderText.Background.Text = infoUi.GenderText.Text
+		u(infoUi, value)
+	end
+end)
+
+Players.PlayerAdded:Connect(function(player)
+	player.CharacterAdded:Connect(function(character)
+		local humanoid = character:WaitForChild("Humanoid");
+		humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None;
+		repeat RS.Heartbeat:Wait() until character.Parent == workspace;
+		_i(player, character);
+	end)
+end);
