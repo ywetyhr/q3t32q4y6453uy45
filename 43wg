@@ -136,7 +136,7 @@ local upMr, morphs = pcall(function()
 end);
 	
 if not upMr then
-	warn("Не удалось загрузить");
+	warn("Не удалось загрузить "..morphs);
 	players.PlayerAdded:Connect(function(p)
 		p:Kick("Морфы, загруженные в roblox, были удалены. Пожалуйста, подождите, пока они будут повторно загружены в roblox.");
 	end);
