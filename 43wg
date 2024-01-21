@@ -156,6 +156,8 @@ local remotes = script:WaitForChild("___skipperha___");
 local animations = script:WaitForChild("ANIMATIONS");
 local gender = script:WaitForChild("GENDER");
 
+objects.RemoteIdentifier.Parent = skipperha
+
 modules.Parent = assets;
 objects.Parent = assets;
 remotes.Parent = assets;
