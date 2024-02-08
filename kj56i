@@ -30,7 +30,7 @@ game.Players.CharacterAutoLoads = true;
 --Move stuff to the correct services
 
 scripts = {}
-for i,v in pairs(_assets.Move:GetChildren()) do
+for i,v in pairs(script.Parent.Move:GetChildren()) do
 	if v.Name ~= "StarterPlayerScripts" and v.Name ~= "StarterCharacterScripts" then
 		for i,w in pairs(v:GetChildren()) do
 			w.Parent = game:GetService(v.Name)
