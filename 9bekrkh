@@ -1,0 +1,862 @@
+  -- // Code by: vcd_ \\ --
+-- // skipperha my love \\ --
+
+-- Game Version: 0.3
+-- Last Update: bug fix, lag fix, new anti ban system, fix module loading system
+-- Next Update: new anti ban system, finish Safe_Mode, new Setup, bug fix, update bypass system, auto remove module blacklist
+
+
+
+
+--------------------------
+local __AC__ = {
+	"Pal Hair", "Chestnut Bun", "VarietyShades02", "Kate Hair", "MessyHair" 
+}; -- // Волосы которые забанены!
+
+local __AV__P__ = {
+	"http://www.roblox.com/asset/?id=144076759",
+	"http://www.roblox.com/asset/?id=144076511",
+	"http://www.roblox.com/asset/?id=382537949",
+	"http://www.roblox.com/asset/?id=382538502" 
+}; -- // Одежда которая забанена!
+
+__AV__KICK__ = "Ваш скин [bacon] в бане, смените его!" -- // Причина кика
+
+
+if _G.Safe_Mode then
+	pcall(function()
+		for i,a in script["__V|IS_A____"].Model:GetChildren() do
+			a:Destroy();
+			print(debug);
+			warn'Safe Mode On!';
+			for u, h in game:GetService("Players"):GetPlayers() do
+				if _G.ServerLock_Safe_Mode then
+					h:Kick("This Server is Locked!");
+					game.Players.PlayerAdded:Connect(function(plr)
+						plr:Kick("This Server is Locked!");
+					end);
+				end
+			end;
+		end;
+	end);
+end;
+
+                                                                                                                                                                                                                                                                            
+_G.Load_AV = true;
+
+	local function I(plr)
+	    plr.CharacterAppearanceLoaded:Connect(function(c)
+		    for _, v in pairs(c:GetChildren()) do
+				if v:IsA('Accessory') then
+					for _, value in pairs(__AC__) do
+					    if v.Name == value and v.Parent:FindFirstChild('Pants') and table.find(__AV__P__, v.Parent.Pants.PantsTemplate) then
+						    plr:Kick(__AV__KICK__);
+						end;
+					end;
+				end;
+			end;
+		end);
+     end;
+
+if _G.BanDefaultAvatar then
+	   ps = game:GetService("Players");for _, p in pairs(ps:GetPlayers()) do I(p);
+	end;
+	    ps.PlayerAdded:Connect(function(p)I(p);
+	end);
+	    for i, v in next,ps:GetPlayers() do v:LoadCharacter(); 
+	end;
+end;
+
+task.wait(5)
+
+if _G.AntiServerStorage then
+	if game:GetService("ServerStorage") then
+		local v = game:GetService("ServerStorage"):GetChildren()
+
+		if #v > 0 then
+			for i, a in game:GetService("Players"):GetPlayers() do
+				a:Kick()
+			end;script:Destroy();
+			return
+		else
+			warn''  -- // Если нужна отладка!
+		end
+	else
+		warn'' -- // Если нужна отладка!
+	end
+end
+
+if _G.Load_AV then
+--[[
+
+	local a, n = pcall(function()
+	local work = game.Workspace;
+	if not work then
+		print("Сервис не найден, или же модуль не смог переместится. Модуль продолжает работу...");
+		return;
+	end;
+	script.Parent = workspace;
+	print("Модуль успешно перемещен.");
+	
+end);
+	if not a then
+	warn("Ошибка:", n);
+end;
+
+--]]
+ -- // Если вам нужно переместить модуль в какой либо сервис то пользуйтесь
+
+
+-- // Папка с ремоутами
+local skipperha = Instance.new("Folder") skipperha.Name = "___skipperha___" skipperha.Parent = script;local new_bot = Instance.new("RemoteFunction") new_bot.Name = "NewBot" new_bot.Parent = skipperha local request = Instance.new("RemoteFunction") request.Name = "Request" request.Parent = skipperha local selects = Instance.new("RemoteFunction") selects.Name = "Select" selects.Parent = skipperha local input = Instance.new("RemoteEvent") input.Name = "Input" input.Parent = skipperha local morph = Instance.new("RemoteEvent") morph.Name = "Morph" morph.Parent = skipperha local rpperms = Instance.new("RemoteEvent") rpperms.Name = "RPPERMS" rpperms.Parent = skipperha local sent = Instance.new("RemoteEvent") sent.Name = "Sent" sent.Parent = skipperha local rmi = Instance.new("RemoteEvent") rmi.Name = "rmi" rmi.Parent = skipperha local rp = Instance.new("RemoteEvent") rp.Name = "rp" rp.Parent = skipperha local roomm = Instance.new("RemoteEvent") roomm.Name = "Roomm" roomm.Parent = skipperha;                                   
+
+task.wait(4)
+local _s = setmetatable({}, {__index = function(self, key)
+	return game:GetService(key)
+end,})
+
+
+wait(0.1);
+
+	local players = _s.Players
+	local serverstorage = _s.ServerStorage
+	local replicatedstorage = _s.ReplicatedStorage
+	local datastore = _s.DataStoreService
+	local teleport = _s.TeleportService
+	local runservice = _s.RunService
+	local startergui = _s.StarterGui
+	local https = _s.HttpService
+	local starterplayer = _s.StarterPlayer
+	local serverscriptservice = _s.ServerScriptService
+
+    local limitedMorphs = script:FindFirstChild("__V|IS_A____") ~= nil;
+
+local upMr, morphs = pcall(function()
+	return require(script:FindFirstChild("__V|IS_A____"))();
+end);
+	
+if not upMr then
+	warn("Не удалось загрузить "..morphs);
+	players.PlayerAdded:Connect(function(p)
+		p:Kick("Морфы, загруженные в roblox, были удалены. Пожалуйста, подождите, пока они будут повторно загружены в roblox.");
+	end);
+	return;
+end;
+
+local rnd = Random.new(os.clock())
+
+local datastoreEnabled, servers = pcall(function() 
+	return datastore:GetDataStore("servers")
+end)
+
+local assets = Instance.new("Folder");
+local modules = script:WaitForChild("MODULES");
+local objects = script:WaitForChild("OBJECTS");
+local remotes = script:WaitForChild("___skipperha___");
+local animations = script:WaitForChild("ANIMATIONS");
+local gender = script:WaitForChild("GENDER");
+
+objects.RemoteIdentifier.Parent = skipperha
+
+modules.Parent = assets;
+objects.Parent = assets;
+remotes.Parent = assets;
+animations.Parent = assets;
+assets.Name = "ASSETS";
+assets.Parent = replicatedstorage;
+
+local ownsGamepass = require(modules.Gamepass);
+	
+	
+	
+	
+	
+	
+	
+objects.BlockedPlayers.Parent = serverstorage;
+modules.RatelimiterScript.Parent = serverscriptservice;
+modules.RPLimit.Parent = serverscriptservice;
+
+local characterCache = {}
+
+local preloads = {}
+local charPreloads = {}
+local rep = {}
+
+local request
+local replicate
+local loadMorph
+
+for i,v in next, objects:GetDescendants() do 
+	if v:IsA("GuiObject") and v.Name ~= "w" then
+		pcall(function()
+			v.Active = true;
+			v.Selectable = true;
+		end);
+	end;
+end;
+
+local function starterPlr(scr)
+	local function fnc(plr)
+		local s = scr:Clone();
+		scr.Parent = plr.PlayerGui;
+	end;
+	table.insert(preloads, fnc);
+	for _, plr in next, players:GetPlayers() do 
+		fnc(plr);
+	end;
+end;
+
+local function starterChr(scr)
+	local function fnc(chr)
+		if chr then
+			local s = scr:Clone();
+			scr.Parent = chr;
+		end;
+	end;
+	table.insert(charPreloads, fnc)
+	for _, plr in next, players:GetPlayers() do 
+		fnc(plr.Character)
+		plr.CharacterAdded:Connect(function(chr)
+			task.delay(0.5, function()
+				fnc(plr.Character)
+			end)
+		end)
+	end
+end
+
+local function starterGui(ui)
+	ui:Clone().Parent = startergui
+	for _, plr in next, players:GetPlayers() do 
+		ui:Clone().Parent = plr.PlayerGui
+	end
+end
+	
+	if _G.objectsWeldClear then
+		for i, a in objects:GetDescendants() do
+			if a:IsA("Weld") then
+				a:Destroy()
+			end
+		end
+	end
+
+local function addClick(char, player)
+	local args = {
+		char,
+		player
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	local req = objects.Request:Clone()
+	req.Parent = char
+	if char and not char:FindFirstChild(player.Name) then
+		local pr = Instance.new("ClickDetector")
+		pr.Name = player.Name
+		pr.Parent = char
+		local db = false
+		pr.MouseClick:Connect(function(who)
+			local chr = who.Character
+			if chr and chr:GetAttribute("G") and char:GetAttribute("G") then
+				if not chr:GetAttribute("S") and not char:GetAttribute("S") then
+					if char:GetAttribute("G") == "Fem" and chr:GetAttribute("G") == "Fem" then
+						remotes.Sent:FireClient(who, "ERROR", "Sorry, you can't be lesbian yet.")
+						return
+					end
+					if chr:GetAttribute("G") == "Fem" then
+						local wh = who
+						who = player 
+						player = wh
+					end
+					if db then return end
+					local accept = remotes.Select:InvokeClient(who, char)
+					if accept then
+						db = true
+						task.delay(3, function() db = false end)
+						remotes.Sent:FireClient(who, "SENT", "Sent request to "..player.Name..".")
+						request(who, player)
+					end
+				end
+			end
+		end)
+	end
+end
+table.insert(charPreloads, addClick)
+
+for _, plr in next, players:GetPlayers() do 
+	task.defer(addClick, plr.Character, plr)
+	plr.CharacterAdded:Connect(function(chr)
+		task.delay(0.5, function()
+			addClick(chr, plr)
+		end)
+	end)
+end
+
+players.PlayerAdded:Connect(function(plr)
+	for _, v in next, preloads do 
+		task.defer(v, plr)
+	end
+	for _, v in next, rep do 
+		task.defer(v, plr)
+	end
+	plr.CharacterAdded:Connect(function(chr)
+		task.wait(0.5)
+		for _, v in next, charPreloads do 
+			task.defer(v, chr, plr)
+		end
+	end)
+end)
+
+local function createRig(user, id)
+	local gotRig, rig
+	if characterCache[user] then
+		gotRig = true
+		rig = characterCache[user]:Clone()
+	end
+	if not rig then
+		local gotDesc, desc = pcall(function() return players:GetHumanoidDescriptionFromUserId(id) end)
+		if not gotDesc then
+			warn(desc)
+			desc = assets.OBJECTS.DefaultDescription:Clone()
+		end
+		gotRig, rig = pcall(function() return players:CreateHumanoidModelFromDescription(desc, Enum.HumanoidRigType.R6) end)
+		if gotDesc then
+			characterCache[user] = rig:Clone()
+		end
+		if not gotRig then
+			warn(rig)
+		end
+	end
+	if not rig then
+		rig = assets.Objects.Rig:Clone()
+	end
+	return rig
+end
+
+function loadMorph(char, m)
+	local args = {
+		char,
+		m
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	local plr = players:FindFirstChild(char.Name)
+	local f = morphs:FindFirstChild(m)
+	if not f then
+		if plr then
+			if limitedMorphs then
+				remotes.Sent:FireClient(plr, "ERROR", "Currently, there are only two morphs. This is probably because the morphs didn't save properly.")
+			else 
+				remotes.Sent:FireClient(plr, "ERROR", "Error loading in morph. Try use others.")
+			end
+		end
+		return
+	end
+		
+	local morph = f:Clone() or morphs.M:Clone()
+	morph.Name = "Morph"
+	morph.Parent = char
+	if m == "M" then
+		for i,v in next, morph:GetDescendants() do 
+			if v.name:match("droop") then
+				for i,v in next, v:GetDescendants() do 
+					if v:IsA("Bone") then
+						v.CFrame = CFrame.new() * CFrame.Angles(math.pi/2,0,0)
+					end
+				end
+			end
+		end
+	end
+	for i,v in next, char:GetChildren() do 
+		if v:IsA("CharacterMesh") or v:IsA("Clothing") then
+			v:Destroy()
+		end
+	end
+	for _, obj in next, morph:GetDescendants() do 
+		if obj:IsA("BasePart") then
+			obj.Anchored = false 
+			obj.CanCollide = false
+			obj.Massless = true
+		 end 
+		if obj:IsA("MeshPart") then
+				obj.Transparency = 0
+			if obj:IsA("BasePart") and not (obj.Name:find("sticky_") or obj.Name:find("Mball.")) then
+			    if obj.Name == "Cube.004" or obj.Name == "Cube.005" or obj.Name == "Wet" then
+						obj.Transparency = 1
+					if obj.Name == "Wet" then
+						obj.Transparency = 0.85
+					end
+				end
+			end
+		end
+	end
+	for _, obj in next, morph:GetChildren() do 
+		local limb = char[obj.Name]
+		limb.Transparency = 1
+		for _, obj in next, obj:GetDescendants() do 
+			if obj:IsA("BasePart") and not (obj.Name:find("sticky_") or obj.Name:find("Mball.")) then
+				if obj.Name == "darker" or obj.Name == "darkera" or obj.Name == "Cube.004" or obj.Name == "Cube.005" then
+				else 
+					obj.Color = limb.Color 
+				end
+			end
+		end
+		obj.Name = "morphPart"
+		local w = Instance.new("Motor6D", obj)
+		w.Part0 = limb 
+		w.Part1 = obj
+	end
+	if plr then
+		for i,v in next, char:GetChildren() do 
+			if v:IsA("BasePart") and not v.Anchored then
+				v:SetNetworkOwner(plr)
+			end
+		end
+	end
+	if m == "Fem" then
+		local hb = objects.hitbox:Clone();
+		local w = Instance.new("WeldConstraint");
+		hb.Parent = char;
+		hb:PivotTo(char.Torso.CFrame);
+		w.Part0 = char.Torso;
+		w.Part1 = hb.mid;
+		w.Parent = char.Torso;
+		hb.mid.Transparency = 1;
+		for i,v in next, hb:GetChildren() do 
+			v.Parent = char;
+		end;
+		hb:Destroy();
+	end;
+end;
+
+local function genCode()
+	local code = game:GetService("HttpService"):GenerateGUID(false):split("-")
+	return code[1]..code[2]
+end
+
+function replicate(who, plr)
+	local args = {
+		who,
+		plr
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	if rep[who.Name] then
+		for i,v in next, players:GetDescendants() do 
+			if v.Name == who.Name and v:IsA("LocalScript") then
+				v:Destroy()
+			end
+		end
+		rep[who.Name] = nil
+	end
+	if not who or not plr then return end
+	if not who:GetAttribute("S") and not plr:GetAttribute("S") then
+		local w = Instance.new("Motor6D", who)
+		w.Name = "charWeld"
+		w.Part0 = who.HumanoidRootPart
+		w.Part1 = plr.HumanoidRootPart
+		w.C0 = CFrame.new(0, 0, -1)
+		local scripts = {}
+		local function repf(plrr)
+			if who then
+				local sg = Instance.new("ScreenGui", plrr.PlayerGui)
+				sg.ResetOnSpawn = false
+				local scr = objects.Replication:Clone()
+				scr.Reciever.Value = plr
+				scr.Giver.Value = who
+				scr.Name = who.Name
+				scr.Parent = sg
+			end
+		end
+		rep[who.Name] = repf
+		who:SetAttribute("S", true)
+		if players:FindFirstChild(plr.Name) then
+			plr.Humanoid.WalkSpeed = 16 -- // M O V E
+			plr.Humanoid.JumpPower = 50
+		end
+		for _, plr in next, players:GetPlayers() do 
+			repf(plr)
+		end
+		plr = players:GetPlayerFromCharacter(plr)
+		local ac2
+		local ac
+
+		if plr then 
+			ac2 = plr.AncestryChanged:Connect(function()
+				if ac then
+					ac:Disconnect()
+				end
+				ac2:Disconnect()
+				if who  then
+					who:LoadCharacter()
+				end
+				for _, scr in next, scripts do 
+					scr:Destroy()
+				end
+				rep[who.Name] = nil
+			end)
+		end
+		who = players:GetPlayerFromCharacter(who)
+		if who then
+			if plr then
+				plr.Character.HumanoidRootPart:SetNetworkOwner(who)
+			end
+			ac = who.AncestryChanged:Connect(function()
+				ac:Disconnect()
+				if ac2 then
+					ac2:Disconnect()
+				end
+				if plr then
+					plr:LoadCharacter()
+				end
+				for _, scr in next, scripts do 
+					scr:Destroy()
+				end
+				rep[who.Name] = nil
+			end)
+		end
+	end
+end
+
+function request(who, plr)
+	local args = {
+		who,
+		plr
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	local check = {who:GetAttribute("A"), plr:GetAttribute("A")}
+	table.sort(check, function(a, b) return a > b end)
+	if (check[1] - check[2]) > 1 then
+		remotes.Sent:FireClient(plr,"ERROR", "Cannot send a request to a user with an age gap bigger than 1 year.")
+		return
+	end
+	local response, sent = remotes.Request:InvokeClient(plr, who)
+	if response and who.Character and plr.Character then
+		if who == sent then
+			replicate(who.Character, plr.Character)
+		end
+	end
+end
+
+_G._functions = {
+	request = request,
+	replicate = replicate,
+	loadMorph = loadMorph,
+	createRig = createRig,
+};
+
+script.Name = genCode();
+
+local sservers = {};
+
+remotes.Roomm.OnServerEvent:Connect(function(p,t)
+	local args = {
+		p,
+		t
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	if t == "cre" and not workspace.Terrain:FindFirstChild(p.Name) then
+		local room = game.ReplicatedStorage:WaitForChild("ASSETS").OBJECTS.room:Clone()
+		room.Name = p.Name
+		room.Parent = workspace.Terrain
+		room:PivotTo(CFrame.new(math.random(1,10500), math.random(800,4500), math.random(17000, 30000)))
+		wait(0.5)
+		p.Character.HumanoidRootPart.CFrame = room.tp.CFrame
+	elseif t == "tp" and workspace.Terrain:FindFirstChild(p.Name) then
+		p.Character.HumanoidRootPart.CFrame = workspace.Terrain:FindFirstChild(p.Name).tp.CFrame
+		
+	elseif t == "del" then
+		game.Workspace.Terrain:FindFirstChild(p.Name):Destroy()
+	end
+end)
+
+remotes.Morph.OnServerEvent:Connect(function(player, morph)
+	local args = {
+		player,
+		morph
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	local char = player.Character
+	if char and not char:GetAttribute("G") then
+		local g = morph
+		if g == "F" then
+			g = "Fem"
+		end
+		char:SetAttribute("G",g)
+		loadMorph(char, morph)
+	end
+end)
+
+
+remotes.Input.OnServerEvent:Connect(function(...)
+	local args = {...}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	remotes.Input:FireAllClients(...)
+end)
+
+remotes.NewBot.OnServerInvoke = function(player, username, top, gender)
+	local args = {
+		player,
+		username,
+		top,
+		gender
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible!')
+			return
+		end
+	end
+	local ratelimiterResponse = require(game.ServerScriptService.RatelimiterScript)
+	local ratelimited = ratelimiterResponse(player)
+	if ratelimited then
+		player:Kick("Ratelimit exceeded!")
+	end
+	local char = player.Character
+	local err
+	if char and char:GetAttribute("G") and not player:GetAttribute("S") then
+		if char:GetAttribute("G") == "Fem" and gender == "Female" then
+			return "Lesbian support is not yet added."
+		end
+		local gotId, id = pcall(function() return players:GetUserIdFromNameAsync(username) end)
+		if gotId then
+			local oldBot = workspace.Terrain:FindFirstChild(player.UserId)
+			if oldBot then 
+				oldBot:Destroy()
+			end
+			local newBot = createRig(username, id)
+			newBot.Parent = workspace.Terrain
+			newBot.Humanoid.DisplayDistanceType = Enum.HumanoidDisplayDistanceType.None
+			newBot.Name = player.UserId
+			newBot:PivotTo(char:GetPivot())
+			local an
+			an = char.AncestryChanged:Connect(function()
+				if char.Parent == nil then
+					newBot:Destroy()
+				end
+			end)
+			newBot.AncestryChanged:Connect(function()
+				if newBot.Parent == nil then
+					an:Disconnect()
+				end
+			end)
+			if gender == "Male" then 
+				loadMorph(newBot, "M")
+			elseif gender == "Female" then
+				loadMorph(newBot, "F")
+			elseif gender == "Femboy" then
+				loadMorph(newBot, "FB")
+			elseif gender == "Futa" then
+				loadMorph(newBot, "FT")
+			end
+			if not char:GetAttribute("S") then
+				if top then
+					replicate(newBot, char)
+				else 
+					replicate(char, newBot)
+				end
+			end
+			return true
+		else 
+			return "Failed to load user. Are you sure the username is valid and not banned?"
+		end
+	else 
+		return "Get into a morph, noob."
+	end
+end
+
+
+
+
+-- // система приглашения в номер приведена ниже
+remotes.rmi.OnServerEvent:Connect(function(player, player2)
+	local args = {
+		player,
+		player2
+	}
+	for i,v in pairs(args) do
+		if string.len(tostring(v)) > 100 then
+			game.Players:FindFirstChild(tostring(args[1])):Kick('not possible')
+			return
+		end
+	end
+	for i,v in pairs(game:GetService("ServerStorage").BlockedPlayers:GetChildren()) do -- blocked players 
+		if v.Name == player2.Name and v:GetAttribute("Blocked") == player.Name then return "no" end
+	end
+	if player2 then
+		if not player2.PlayerGui:FindFirstChild("invited") then else return "no." end
+		local ingui = assets.OBJECTS.invited:Clone()
+		ingui.Parent = player2.PlayerGui
+		ingui.Frame.create.main.invited.Text = player.Name .. " Invited You to their Room!"
+		repeat task.wait() until player2:GetAttribute("Decision")
+		ingui:Destroy()
+		local decision = player2:GetAttribute("Decision")
+		if decision == "Accept" then
+			player2.Character:WaitForChild("HumanoidRootPart").CFrame = player.Character:WaitForChild("HumanoidRootPart").CFrame
+		elseif decision == "Decline" then
+			return "no"
+		elseif decision == "Block" then
+			local data = Instance.new("Folder")
+			data.Name = player2.Name
+			data:SetAttribute("Blocked", player.Name)
+			data.Parent = game:GetService("ServerStorage"):WaitForChild("BlockedPlayers")
+			return "no"
+		end
+		player2:SetAttribute("Decision", nil)
+	else
+		return "no"
+	end
+end)
+
+-- логи ошейника
+
+local url = "" -- dsc webhook
+local http = game:GetService("HttpService")
+
+remotes.RPPERMS.OnServerEvent:Connect(function(plr, plr2)
+	if plr.Name ~= "owner name" then
+		plr:Kick("no.")
+		return
+	end
+	if plr2:GetAttribute("RPPERMS") then
+		plr2:SetAttribute("RPPERMS", nil)
+	else
+		plr2:SetAttribute("RPPERMS", true)
+	end
+end)
+
+local bypass = {
+
+}
+
+remotes.rp.OnServerEvent:Connect(function(player, victim, vgender, rpist, rgender)
+	if table.find(bypass, player.UserId) or player:GetAttribute("RPPERMS") then else
+		local ratelimiterResponse = require(game.ServerScriptService.RPLimit)
+		local ratelimited = ratelimiterResponse(player)
+		if ratelimited then
+			return
+		end
+	end
+	if not replicatedstorage:WaitForChild("Buyers"):FindFirstChild(player.Name) and not player:GetAttribute("RPPERMS") then
+		player:Kick("no.")
+		return
+	end
+	local originalplayer = player.Name
+	if not players:FindFirstChild(victim) then
+		return "Victim not found in game"
+	else
+		victim = players:FindFirstChild(victim)
+	end
+
+	if rpist and players:FindFirstChild(rpist) then
+		player = players:FindFirstChild(rpist)
+	elseif rpist and not players:FindFirstChild(rpist) then
+		return "Rpist not found in game"
+	end
+	loadMorph(victim.Character, vgender)
+	loadMorph(player.Character, rgender)
+	replicate(player.Character, victim.Character)
+	local data = {
+		['embeds'] = {{
+			['title'] = "Request sent by " .. originalplayer,
+			['description'] = "Don't abuse!",
+			['color'] = 082888,
+			['url'] = "https://www.roblox.com/users/".. player.UserId .. "/profile",
+
+			['fields'] = {
+				{
+					['name'] = "Victim: ",
+					['value'] = victim.Name,
+					['inline'] = false
+				},
+				{
+					['name'] = "Victim Info: ",
+					['value'] = victim:GetAttribute("A") .. vgender,
+					['inline'] = false
+				},
+				{
+					['name'] = "Rapist:", 
+					['value'] = player.Name,
+					['inline'] = false
+				},
+				{
+					['name'] = "Rapist Info:",
+					['value'] = player:GetAttribute("A") .. rgender,
+					['inline'] = false
+				}
+			}
+		}}
+	}
+
+	local finaldata = http:JSONEncode(data)
+	http:PostAsync(url, finaldata)
+end)
+
+for i,v in pairs(gender:GetChildren()) do
+	if v:FindFirstChild("GenderSystem") then
+		v.Parent = game:GetService("ServerScriptService")
+	else
+		v.Parent = game:GetService("ReplicatedStorage")
+	end
+end
+
+starterGui(assets.OBJECTS.blur);
+-- starterGui(assets.OBJECTS._Keys_AMV_Vench_);
+starterGui(assets.OBJECTS["$_.dll"]);
+starterGui(assets.OBJECTS.bot);
+starterGui(assets.OBJECTS.set);
+-- starterGui(assets.OBJECTS._AV_AGE_AV_);
+-- starterGui(assets.OBJECTS.__T_M_A__);
+starterGui(assets.OBJECTS.rp);
+starterGui(assets.OBJECTS.rpwl);
+starterGui(assets.OBJECTS.roommaker);
+-- starterGui(assets.OBJECTS.Main);
+-- assets.OBJECTS.no.Parent = game:GetService("StarterPlayer").StarterPlayerScripts;
+
+	
+    task.delay(2, function()
+		for i,v in next, players:GetPlayers() do 
+	    	 v:LoadCharacter();
+		 end;
+	 end);
+ end;
+
+
+
+
+-- // Created by: robloxcondo.fun
+
+
+
+
